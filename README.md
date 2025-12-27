@@ -1,1 +1,1 @@
-# bami-identity-service
+# bami identity service

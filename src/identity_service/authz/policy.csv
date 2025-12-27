@@ -1,0 +1,7 @@
+# subject, object, action
+# p, role:admin, /api/*, (GET|POST|PUT|DELETE)
+
+# p, role:seller, /api/orders, (GET|POST)
+# p, role:seller, /api/orders/:id, (GET|PUT)
+
+# g, role:seller, role:user

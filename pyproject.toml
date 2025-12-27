@@ -1,0 +1,16 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "identity"
+version = "0.1.0"
+requires-python = ">=3.12"
+dependencies = [
+  "fastapi",
+  "uvicorn",
+  "bami-chassis==0.3.1"
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/identity_service"]
