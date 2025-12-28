@@ -1,3 +1,5 @@
+from bami_chassis.interfaces.api import metrics_router
+from bami_chassis.interfaces.api.health import health_router
 from fastapi import FastAPI
 from bami_chassis import (
     settings,
@@ -23,6 +25,7 @@ def create_app() -> FastAPI:
 
     app.include_router(health_router)
     app.include_router(metrics_router)
+    app.include_router(auth.router, prefix="/api/v1")
 
     return app
 
