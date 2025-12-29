@@ -10,6 +10,9 @@ from bami_chassis import (
     instrument_app,
 )
 
+from identity_service.api.v1 import auth
+
+
 def create_app() -> FastAPI:
     app = FastAPI(
         title="identity service",

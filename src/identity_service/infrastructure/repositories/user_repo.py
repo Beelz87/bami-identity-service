@@ -1,42 +1,51 @@
-import uuid
-from typing import Dict, Optional
+from sqlalchemy.orm import Session
+from sqlalchemy.exc import IntegrityError
 
-from identity_service.domain.models.user import User
+from identity_service.domain.models.user import UserORM, User
+from identity_service.infrastructure.repositories.mappers import to_domain
 
 
 class UserRepository:
-    """
-    In-memory user repository.
-    Suitable for early development and testing.
-    """
+    def __init__(self, session: Session):
+        self.session = session
 
-    def __init__(self):
-        # key: user_id
-        self._users: Dict[str, User] = {}
+    def get_by_username(self, username: str) -> User | None:
+        user = (
+            self.session
+            .query(UserORM)
+            .filter(UserORM.username == username)
+            .one_or_none()
+        )
+        return to_domain(user) if user else None
 
-    def get_by_username(self, username: str) -> Optional[User]:
-        for user in self._users.values():
-            if user.username == username:
-                return user
-        return None
-
-    def get_by_id(self, user_id: str) -> Optional[User]:
-        return self._users.get(user_id)
+    def get_by_id(self, user_id: str) -> User | None:
+        user = (
+            self.session
+            .query(UserORM)
+            .filter(UserORM.id == user_id)
+            .one_or_none()
+        )
+        return to_domain(user) if user else None
 
     def create(
         self,
         username: str,
         password: str,
-        roles: list[str]
+        roles: list[str],
+        tenant_id: str,
     ) -> User:
-        user_id = str(uuid.uuid4())
-
-        user = User(
-            id=user_id,
+        user = UserORM(
             username=username,
             password=password,
             roles=roles
         )
 
-        self._users[user_id] = user
-        return user
+        self.session.add(user)
+        try:
+            self.session.commit()
+        except IntegrityError:
+            self.session.rollback()
+            raise
+
+        self.session.refresh(user)
+        return to_domain(user)
