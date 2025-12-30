@@ -9,7 +9,7 @@ requires-python = ">=3.12"
 dependencies = [
   "fastapi",
   "uvicorn",
-  "bami-chassis==0.3.7",
+  "bami-chassis==0.4.3",
   "passlib[bcrypt]"
 ]
 
