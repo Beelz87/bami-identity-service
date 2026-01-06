@@ -1,4 +1,4 @@
-from identity_service.domain.models.user import UserORM, User
+from domain.models.user import UserORM, User
 
 
 def to_domain(user: UserORM) -> User:
